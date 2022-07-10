@@ -4,10 +4,10 @@
   "description": "",
   "main": "server.ts",
   "scripts": {
-    "start": "node build/server.js",
-    "watch": "tsc-watch --esModuleInterop src/server.ts --outDir ./build --onSuccess \"node ./build/server.js\"",
+    "start": "node src/server.ts",
+    "watch": "tsc-watch --esModuleInterop src/server.ts --outDir ./dist --onSuccess \"node ./dist/server.js\"",
     "test": "jasmine-ts",
-    "build": "tsc"
+    "tsc": "tsc"
   },
   "author": "Udacity",
   "license": "ISC",
