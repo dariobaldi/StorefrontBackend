@@ -89,7 +89,7 @@ export class UserStore {
         }
     }
 
-    async authenticate(user: User): Promise<User> {
+    async authenticatePassword(user: User): Promise<User> {
         try {
             const conn = await Client.connect();
             const sql = "SELECT password_hash FROM users WHERE id=$1;"
