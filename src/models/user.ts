@@ -32,7 +32,7 @@ export class UserStore {
             conn.release();
             return result.rows[0];
         } catch(err){
-            throw err;
+            throw new Error(`Could not create user: ${err}`);
         }
     }
 
@@ -44,7 +44,7 @@ export class UserStore {
             conn.release();
             return result.rows;
         } catch(err){
-            throw err;
+            throw new Error(`Could not get users: ${err}`);
         }
     }
 
@@ -56,7 +56,7 @@ export class UserStore {
             conn.release();
             return result.rows[0];
         } catch(err){
-            throw err;
+            throw new Error(`Could not get user: ${err}`);
         }
     }
 
@@ -73,7 +73,7 @@ export class UserStore {
             conn.release();
             return result.rows[0];
         } catch(err){
-            throw err;
+            throw new Error(`Could not update user: ${err}`);
         }
     }
 
@@ -85,7 +85,7 @@ export class UserStore {
             conn.release();
             return result.rows[0];
         } catch(err){
-            throw err;
+            throw new Error(`Could not delete user: ${err}`);
         }
     }
 
@@ -110,7 +110,7 @@ export class UserStore {
             }
             throw new Error("Password incorrect");
         } catch(err){
-            throw err;
+            throw new Error(`Could not authenticate user: ${err}`);
         }
     }
 }

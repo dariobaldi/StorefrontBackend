@@ -1,6 +1,6 @@
 import express, { Request, Response } from 'express';
 import { User, UserStore } from '../models/user';
-import jwt from 'jsonwebtoken';
+import jwt, { decode } from 'jsonwebtoken';
 
 const store = new UserStore();
 const secret_token = process.env.SECRET_TOKEN as unknown as string;
@@ -26,7 +26,7 @@ const index = async (req: Request, res: Response) => {
         const users = await store.index();
         res.json(users);
     } catch(err) {
-        res.status(500).json({ error: err});
+        res.status(500).json({ error: `Could not get users: ${err}`});
     }
 }
 
@@ -36,17 +36,31 @@ const select = async (req: Request, res: Response) => {
         const user = await store.select(id);
         res.json(user);
     } catch(err) {
-        res.status(500).json({ error: err});
+        res.status(500).json({ error: `Could not get user: ${err}`});
     }
 }
 
-const edit = async (req: Request, res: Response) => {
+const update = async (req: Request, res: Response) => {
     const user = req.body as User;
+
+    // Verify user id from token
+    try {
+        const authHeader = req.headers.authorization as unknown as string;
+        const token = authHeader.split(' ')[1];
+        const decoded = jwt.verify(token, secret_token);
+        // @ts-ignore
+        if(decode.id !== user.id) {
+            res.status(401).json({ error: 'Unauthorized' });
+        }
+    } catch(err) {
+        res.status(401).json(err);
+    }
+
     try {
         const updatedUser = await store.update(user);
         res.json(updatedUser);
     } catch(err) {
-        res.status(500).json({ error: err});
+        res.status(500).json({ error: `Could not update user: ${err}`});
     }
 }
 
@@ -56,7 +70,7 @@ const del = async (req: Request, res: Response) => {
         const deletedUser = await store.delete(id);
         res.json(deletedUser);
     } catch(err) {
-        res.status(500).json({ error: err});
+        res.status(500).json({ error: `Could not delete user: ${err}`});
     }
 }
 
@@ -71,7 +85,7 @@ const authenticatePassword = async (req: Request, res: Response) => {
             res.status(400).json({ error: 'User was not authenticated' });
         }
     } catch(err) {
-        res.status(500).json({ error: err});
+        res.status(500).json({ error: `Could not authenticate user: ${err}`});
     }
 }
 
@@ -96,8 +110,8 @@ const userRoutes = (app: express.Application) => {
     app.post('/users', create);
     app.get('/users', index);
     app.get('/users/:id', select);
-    app.put('/users/:id', edit);
-    app.delete('/users/:id', del);
+    app.put('/users/:id',verifyToken, update);
+    app.delete('/users/:id',verifyToken, del);
     app.post('/users/authenticate', authenticatePassword);
 }
 
