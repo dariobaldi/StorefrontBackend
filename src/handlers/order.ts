@@ -139,3 +139,5 @@ const orderRoutes = (app: express.Application) => {
   app.put('/api/orders/:id/products/:id', updateProduct);
   app.delete('/api/orders/:id/products/:id', deleteProduct);
 };
+
+export default orderRoutes;

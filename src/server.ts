@@ -2,6 +2,7 @@ import express, { Request, Response } from 'express';
 import bodyParser from 'body-parser';
 import userRoutes from './handlers/user';
 import productRoutes from './handlers/product';
+import orderRoutes from './handlers/order';
 
 const app: express.Application = express();
 const port: number = 3333;
@@ -15,6 +16,7 @@ app.get('/', function (req: Request, res: Response) {
 // Routes
 userRoutes(app);
 productRoutes(app);
+orderRoutes(app);
 
 app.listen(port, function () {
   console.log(`starting app on port: ${port}`);
