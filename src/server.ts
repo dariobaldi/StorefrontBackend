@@ -3,9 +3,17 @@ import bodyParser from 'body-parser';
 import userRoutes from './handlers/user';
 import productRoutes from './handlers/product';
 import orderRoutes from './handlers/order';
+import cors from 'cors';
 
 const app: express.Application = express();
 const port: number = 3333;
+
+//Add Cors to allow cross-origin requests
+const corsOptions = {
+  origin: 'http://hereswheretheexternaldomaingoes.com',
+  optionsSuccessStatus: 200,
+};
+app.use(cors(corsOptions));
 
 app.use(bodyParser.json());
 
