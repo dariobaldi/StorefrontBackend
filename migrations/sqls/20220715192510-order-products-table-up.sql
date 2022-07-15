@@ -1,6 +1,8 @@
 CREATE TABLE order_products(
     id SERIAL PRIMARY KEY,
-    order_id INTEGER NOT NULL FOREIGN KEY REFERENCES orders(id),
-    product_id INTEGER NOT NULL FOREIGN KEY REFERENCES products(id),
-    quantity INTEGER NOT NULL
+    order_id INTEGER,
+    product_id INTEGER,
+    quantity INTEGER NOT NULL,
+    CONSTRAINT order_ref FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE SET NULL,
+    CONSTRAINT product_ref FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE SET NULL
 );
