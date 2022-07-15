@@ -39,7 +39,7 @@ export class ProductStore {
     }
   }
 
-  async select(id: number): Promise<Product> {
+  async show(id: number): Promise<Product> {
     try {
       const conn = await Client.connect();
       const sql = 'SELECT * FROM products WHERE id = $1;';
@@ -78,6 +78,39 @@ export class ProductStore {
       return result.rows[0];
     } catch (err) {
       throw new Error(`Could not delete product: ${err}`);
+    }
+  }
+
+  // Get the 5 most popular products
+  async top5Products(): Promise<Product[]>{
+    try{
+      const conn = await Client.connect();
+      const sql = `SELECT products.id,products.name,count(order_products.product_id)
+      FROM products
+      INNER JOIN order_products
+      ON product.id = order_products.id
+      GROUP BY products.id
+      ORDER BY count(order_products.product_id) DESC
+      LIMIT 5;`
+
+      const result = await conn.query(sql);
+      conn.release();
+      return result.rows;
+    } catch(err) {
+      throw new Error(`Cannot get top 5 products: ${err}`)
+    }
+  }
+
+  // Get products by category
+  async getProductsByCategory(category: string): Promise<Product[]>{
+    try{
+      const conn = await Client.connect();
+      const sql = `SELECT * FROM products WHERE category = $1;`
+      const result = await conn.query(sql, [category]);
+      conn.release();
+      return result.rows;
+    } catch(err) {
+      throw new Error(`Cannot get products by category: ${err}`)
     }
   }
 }

@@ -29,10 +29,10 @@ const index = async (req: Request, res: Response) => {
   }
 };
 
-const select = async (req: Request, res: Response) => {
+const show = async (req: Request, res: Response) => {
   try {
     const id = req.params.id as unknown as number;
-    const user = await store.select(id);
+    const user = await store.show(id);
     res.status(200).json(user);
   } catch (err) {
     res.status(500).json({ error: `Could not get user: ${err}` });
@@ -110,9 +110,9 @@ export const verifyToken = async (
 };
 
 const userRoutes = (app: express.Application) => {
-  app.post('/users', create);
-  app.get('/users', index);
-  app.get('/users/:id', select);
+  app.post('/users',verifyToken, create);
+  app.get('/users',verifyToken, index);
+  app.get('/users/:id',verifyToken, show);
   app.put('/users/:id', verifyToken, update);
   app.delete('/users/:id', verifyToken, del);
   app.post('/users/authenticate', authenticatePassword);

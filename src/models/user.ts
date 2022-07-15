@@ -50,7 +50,7 @@ export class UserStore {
     }
   }
 
-  async select(id: number): Promise<User> {
+  async show(id: number): Promise<User> {
     try {
       const conn = await Client.connect();
       const sql = 'SELECT * FROM users WHERE id = $1;';

@@ -33,7 +33,7 @@ const index = async (req: Request, res: Response) => {
 const select = async (req: Request, res: Response) => {
   try {
     const id = req.params.id as unknown as number;
-    const order = await store.select(id);
+    const order = await store.show(id);
     if (order) {
       res.status(200).json(order);
     } else {
@@ -71,6 +71,34 @@ const del = async (req: Request, res: Response) => {
     res.status(500).json({ error: 'Could not delete order' });
   }
 };
+
+const currentOrder = (req: Request, res: Response) => {
+  try{
+    const user_id = req.params.id as unknown as number;
+    const orders = store.currentOrder(user_id);
+    if(orders){
+      res.status(200).json(orders);
+    } else {
+      res.status(400).json({ error: 'Could not get orders' });
+    }
+  } catch(err){
+    res.status(500).json({ error: 'Could not get orders' });
+  }
+}
+
+const completedOrders = async (req: Request, res: Response) => {
+  try{
+    const user_id = req.params.id as unknown as number;
+    const orders = await store.completedOrders(user_id);
+    if(orders){
+      res.status(200).json(orders);
+    } else {
+      res.status(400).json({ error: 'Could not get orders' });
+    }
+  } catch(err){
+    res.status(500).json({ error: 'Could not get orders' });
+  }
+}
 
 const addProduct = async (req: Request, res: Response) => {
   try {
@@ -134,10 +162,12 @@ const orderRoutes = (app: express.Application) => {
   app.get('/api/orders/:id', select);
   app.put('/api/orders/:id', update);
   app.delete('/api/orders/:id', del);
+  app.get('/api/orders/open/user/:id', currentOrder);
+  app.get('/api/orders/completed/user/:id', completedOrders);
   app.post('/api/orders/:id/products', addProduct);
   app.get('/api/orders/:id/products', getProducts);
-  app.put('/api/orders/:id/products/:id', updateProduct);
-  app.delete('/api/orders/:id/products/:id', deleteProduct);
+  app.put('/api/orders/:order_id/products/:product_id', updateProduct);
+  app.delete('/api/orders/:order_id/products/:product_id', deleteProduct);
 };
 
 export default orderRoutes;
