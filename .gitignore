@@ -1,4 +1,5 @@
 .env
+database.json
 node_modules/**
 build/**
 data/**
