@@ -1,6 +1,6 @@
 import express, { Request, Response } from 'express';
 import { User, UserStore } from '../models/user';
-import jwt, { decode } from 'jsonwebtoken';
+import jwt from 'jsonwebtoken';
 
 const store = new UserStore();
 const secret_token = process.env.SECRET_TOKEN as unknown as string;
@@ -46,9 +46,9 @@ const update = async (req: Request, res: Response) => {
   try {
     const authHeader = req.headers.authorization as unknown as string;
     const token = authHeader.split(' ')[1];
-    const decoded = jwt.verify(token, secret_token);
-    // @ts-ignore
-    if (decode.id !== user.id) {
+    const decoded = jwt.verify(token, secret_token) as User;
+  
+    if (decoded.id !== user.id) {
       res.status(401).json({ error: 'Unauthorized' });
     }
   } catch (err) {
@@ -91,28 +91,24 @@ const authenticatePassword = async (req: Request, res: Response) => {
 export const verifyToken = async (
   req: Request,
   res: Response,
-  next: Function
+  next: express.NextFunction
 ) => {
-  const authHeader = req.headers.authorization as string;
-  const token = authHeader;
-  if (token) {
-    try {
-      const decoded = jwt.verify(token, secret_token);
-      // @ts-ignore
-      req.user = decoded.user;
-      next();
-    } catch (err) {
-      res.status(401).json({ error: 'Invalid token' });
-    }
-  } else {
-    res.status(401).json({ error: 'No token provided' });
+  try {
+    const authHeader = req.headers.authorization as string;
+    const token = authHeader.split(' ')[1];
+    const decoded = jwt.verify(token, secret_token) as User;
+
+    req.body.user = decoded;
+    next();
+  } catch (err) {
+    res.status(401).json({ error: 'Invalid token' });
   }
 };
 
 const userRoutes = (app: express.Application) => {
-  app.post('/users',verifyToken, create);
-  app.get('/users',verifyToken, index);
-  app.get('/users/:id',verifyToken, show);
+  app.post('/users', verifyToken, create);
+  app.get('/users', verifyToken, index);
+  app.get('/users/:id', verifyToken, show);
   app.put('/users/:id', verifyToken, update);
   app.delete('/users/:id', verifyToken, del);
   app.post('/users/authenticate', authenticatePassword);

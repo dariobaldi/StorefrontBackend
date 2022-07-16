@@ -64,7 +64,7 @@ const top5Products = async (req: Request, res: Response) => {
   } catch (err) {
     res.status(500).json({ error: `Could not get products: ${err}` });
   }
-}
+};
 
 const getProductsByCategory = async (req: Request, res: Response) => {
   try {
@@ -74,8 +74,7 @@ const getProductsByCategory = async (req: Request, res: Response) => {
   } catch (err) {
     res.status(500).json({ error: `Could not get products: ${err}` });
   }
-}
-
+};
 
 const productRoutes = (app: express.Application) => {
   app.post('/api/products', verifyToken, create);

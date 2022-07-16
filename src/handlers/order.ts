@@ -73,32 +73,32 @@ const del = async (req: Request, res: Response) => {
 };
 
 const currentOrder = (req: Request, res: Response) => {
-  try{
+  try {
     const user_id = req.params.id as unknown as number;
     const orders = store.currentOrder(user_id);
-    if(orders){
+    if (orders) {
       res.status(200).json(orders);
     } else {
       res.status(400).json({ error: 'Could not get orders' });
     }
-  } catch(err){
+  } catch (err) {
     res.status(500).json({ error: 'Could not get orders' });
   }
-}
+};
 
 const completedOrders = async (req: Request, res: Response) => {
-  try{
+  try {
     const user_id = req.params.id as unknown as number;
     const orders = await store.completedOrders(user_id);
-    if(orders){
+    if (orders) {
       res.status(200).json(orders);
     } else {
       res.status(400).json({ error: 'Could not get orders' });
     }
-  } catch(err){
+  } catch (err) {
     res.status(500).json({ error: 'Could not get orders' });
   }
-}
+};
 
 const addProduct = async (req: Request, res: Response) => {
   try {

@@ -82,8 +82,8 @@ export class ProductStore {
   }
 
   // Get the 5 most popular products
-  async top5Products(): Promise<Product[]>{
-    try{
+  async top5Products(): Promise<Product[]> {
+    try {
       const conn = await Client.connect();
       const sql = `SELECT products.id,products.name,count(order_products.product_id)
       FROM products
@@ -91,26 +91,26 @@ export class ProductStore {
       ON product.id = order_products.id
       GROUP BY products.id
       ORDER BY count(order_products.product_id) DESC
-      LIMIT 5;`
+      LIMIT 5;`;
 
       const result = await conn.query(sql);
       conn.release();
       return result.rows;
-    } catch(err) {
-      throw new Error(`Cannot get top 5 products: ${err}`)
+    } catch (err) {
+      throw new Error(`Cannot get top 5 products: ${err}`);
     }
   }
 
   // Get products by category
-  async getProductsByCategory(category: string): Promise<Product[]>{
-    try{
+  async getProductsByCategory(category: string): Promise<Product[]> {
+    try {
       const conn = await Client.connect();
-      const sql = `SELECT * FROM products WHERE category = $1;`
+      const sql = `SELECT * FROM products WHERE category = $1;`;
       const result = await conn.query(sql, [category]);
       conn.release();
       return result.rows;
-    } catch(err) {
-      throw new Error(`Cannot get products by category: ${err}`)
+    } catch (err) {
+      throw new Error(`Cannot get products by category: ${err}`);
     }
   }
 }
