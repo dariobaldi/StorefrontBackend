@@ -47,7 +47,7 @@ const update = async (req: Request, res: Response) => {
     const authHeader = req.headers.authorization as unknown as string;
     const token = authHeader.split(' ')[1];
     const decoded = jwt.verify(token, secret_token) as User;
-  
+
     if (decoded.id !== user.id) {
       res.status(401).json({ error: 'Unauthorized' });
     }
@@ -76,7 +76,7 @@ const del = async (req: Request, res: Response) => {
 const authenticatePassword = async (req: Request, res: Response) => {
   const user = req.body as User;
   try {
-    const authenticatedUser = await store.authenticatePassword(user);
+    const authenticatedUser = await store.authenticate(user);
     if (authenticatedUser) {
       const token = jwt.sign({ user: authenticatedUser }, secret_token);
       res.status(200).json(token);
