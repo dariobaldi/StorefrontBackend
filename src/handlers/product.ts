@@ -14,7 +14,7 @@ const create = async (req: Request, res: Response) => {
       res.status(400).json({ error: 'Product was not created' });
     }
   } catch (err) {
-    res.status(400).json({ error: 'Product was not created' });
+    res.status(400).json({ error: `Product was not created / ${err}` });
   }
 };
 
@@ -57,15 +57,6 @@ const del = async (req: Request, res: Response) => {
   }
 };
 
-const top5Products = async (req: Request, res: Response) => {
-  try {
-    const products = await store.top5Products();
-    res.status(200).json(products);
-  } catch (err) {
-    res.status(500).json({ error: `Could not get products: ${err}` });
-  }
-};
-
 const getProductsByCategory = async (req: Request, res: Response) => {
   try {
     const category = req.params.category as unknown as string;
@@ -77,13 +68,12 @@ const getProductsByCategory = async (req: Request, res: Response) => {
 };
 
 const productRoutes = (app: express.Application) => {
-  app.post('/api/products', verifyToken, create);
-  app.get('/api/products', index);
-  app.get('/api/products/:id', show);
-  app.put('/api/products/:id', update);
-  app.delete('/api/products/:id', del);
-  app.get('/api/products/top5', top5Products);
-  app.get('/api/products/category/:category', getProductsByCategory);
+  app.post('/products', verifyToken, create);
+  app.get('/products', index);
+  app.get('/products/:id', show);
+  app.put('/products/:id', update);
+  app.delete('/products/:id', del);
+  app.get('/products/category/:category', getProductsByCategory);
 };
 
 export default productRoutes;

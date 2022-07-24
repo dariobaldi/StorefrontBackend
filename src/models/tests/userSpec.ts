@@ -19,7 +19,7 @@ describe('- User Model Tests', () => {
     const users = await store.index();
     expect(users[0]).toBeTruthy();
   });
-  
+
   it('Accept right password', async () => {
     const log_user: User = {
       username: 'juanpe',
@@ -39,14 +39,19 @@ describe('- User Model Tests', () => {
     };
     await expectAsync(store.authenticate(log_user)).toBeRejected();
   });
-  
+
   it('Show user with id 2', async () => {
     const user = await store.show(2);
     expect(user.id).toBe(2);
   });
 
   it('Update user', async () => {
-    const update_user: User = { id:2, username: 'juanpe', first_name: 'Victoria', last_name: 'Sosa' };
+    const update_user: User = {
+      id: 2,
+      username: 'juanpe',
+      first_name: 'Victoria',
+      last_name: 'Sosa'
+    };
     const newUser = await store.update(update_user);
     expect([newUser.first_name, newUser.last_name]).toEqual([
       'Victoria',
@@ -54,11 +59,8 @@ describe('- User Model Tests', () => {
     ]);
   });
 
-
   it('Delete user with id 2', async () => {
     const user = await store.delete(2);
-    const select = await store.show(2);
     expect(user.id).toBe(2);
-    expect(select).toBeFalsy();
   });
 });

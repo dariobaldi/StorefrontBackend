@@ -3,7 +3,7 @@ import { User, UserStore } from '../models/user';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 
-dotenv.config()
+dotenv.config();
 
 const store = new UserStore();
 const secret_token = process.env.SECRET_TOKEN as unknown as string;
