@@ -1,6 +1,9 @@
 import express, { Request, Response } from 'express';
 import { User, UserStore } from '../models/user';
 import jwt from 'jsonwebtoken';
+import dotenv from 'dotenv';
+
+dotenv.config()
 
 const store = new UserStore();
 const secret_token = process.env.SECRET_TOKEN as unknown as string;
@@ -16,7 +19,7 @@ const create = async (req: Request, res: Response) => {
       res.status(400).json({ error: 'User was not created' });
     }
   } catch (err) {
-    res.status(400).json({ error: 'User was not created' });
+    res.status(400).json({ error: `User was not created / ${err}` });
   }
 };
 
@@ -33,6 +36,7 @@ const show = async (req: Request, res: Response) => {
   try {
     const id = req.params.id as unknown as number;
     const user = await store.show(id);
+    delete user.password_hash;
     res.status(200).json(user);
   } catch (err) {
     res.status(500).json({ error: `Could not get user: ${err}` });
@@ -74,11 +78,11 @@ const del = async (req: Request, res: Response) => {
 };
 
 const authenticatePassword = async (req: Request, res: Response) => {
-  const user = req.body as User;
+  const req_user = req.body as User;
   try {
-    const authenticatedUser = await store.authenticate(user);
-    if (authenticatedUser) {
-      const token = jwt.sign({ user: authenticatedUser }, secret_token);
+    const user = await store.authenticate(req_user);
+    if (user) {
+      const token = jwt.sign(user, secret_token);
       res.status(200).json(token);
     } else {
       res.status(400).json({ error: 'User was not authenticated' });
@@ -106,7 +110,7 @@ export const verifyToken = async (
 };
 
 const userRoutes = (app: express.Application) => {
-  app.post('/users', verifyToken, create);
+  app.post('/users', create);
   app.get('/users', verifyToken, index);
   app.get('/users/:id', verifyToken, show);
   app.put('/users/:id', verifyToken, update);
