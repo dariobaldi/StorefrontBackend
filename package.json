@@ -5,8 +5,10 @@
   "main": "server.ts",
   "scripts": {
     "start": "node build/server.js",
-    "watch": "tsc-watch --esModuleInterop src/server.ts --outDir ./dist --onSuccess \"node ./dist/server.js\"",
-    "test": "tsc && jasmine-ts",
+    "watch": "tsc-watch --esModuleInterop src/server.ts --outDir ./build --onSuccess \"node ./build/server.js\"",
+    "test": "npm run reset_db && tsc && jasmine-ts",
+    "test_win": "set ENV=test && db-migrate --env test up && npm run tsc && npm run jasmine-ts && db-migrate --env test reset",
+    "reset_db": "db-migrate reset && db-migrate up",
     "build": "tsc",
     "lint": "npx eslint ./src/ --ext .ts",
     "prettier": "prettier --config .prettierrc \"./src/**/*.ts\" --write"
@@ -29,6 +31,7 @@
     "@types/jasmine": "^3.6.3",
     "@types/jsonwebtoken": "^8.5.8",
     "@types/pg": "^7.14.7",
+    "@types/supertest": "^2.0.12",
     "@typescript-eslint/eslint-plugin": "^5.30.6",
     "eslint": "^8.19.0",
     "eslint-config-prettier": "^8.5.0",
@@ -38,6 +41,7 @@
     "jasmine-ts": "^0.3.0",
     "jasmine-ts-console-reporter": "^3.1.1",
     "prettier": "^2.7.1",
+    "supertest": "^6.2.4",
     "ts-node": "^9.1.1",
     "tsc-watch": "^4.2.9",
     "typescript": "^4.7.4"
