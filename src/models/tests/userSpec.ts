@@ -22,7 +22,6 @@ describe('- User Model Tests', () => {
   
   it('Accept right password', async () => {
     const log_user: User = {
-      id: 1,
       username: 'juanpe',
       first_name: 'Victoria',
       last_name: 'Sosa',
@@ -33,7 +32,6 @@ describe('- User Model Tests', () => {
 
   it('Reject wrong password', async () => {
     const log_user: User = {
-      id: 1,
       username: 'juanpe',
       first_name: 'Juan',
       last_name: 'Perez',
@@ -42,13 +40,13 @@ describe('- User Model Tests', () => {
     await expectAsync(store.authenticate(log_user)).toBeRejected();
   });
   
-  it('Show should return a user with id 1', async () => {
-    const user = await store.show(1);
-    expect(user.id).toBe(1);
+  it('Show user with id 2', async () => {
+    const user = await store.show(2);
+    expect(user.id).toBe(2);
   });
 
   it('Update user', async () => {
-    const update_user: User = { username: 'juanpe', first_name: 'Victoria', last_name: 'Sosa', id: 2 };
+    const update_user: User = { id:2, username: 'juanpe', first_name: 'Victoria', last_name: 'Sosa' };
     const newUser = await store.update(update_user);
     expect([newUser.first_name, newUser.last_name]).toEqual([
       'Victoria',

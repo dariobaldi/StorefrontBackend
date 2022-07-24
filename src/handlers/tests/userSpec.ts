@@ -39,12 +39,44 @@ describe('- User Handler:', () => {
         expect(user_1.id).toEqual(1);
     });
 
+    it('Update user with id=1', async () => {
+        const update_user: User = {
+            id: 1,
+            username: 'mari',
+            first_name: 'Mariela',
+            last_name: 'Del Barrio Fernandez',
+        }
+        const response = await request.put('/users/1').set('Authorization', 'Bearer ' + token).send(update_user);
+        expect(response.status).toBe(200);
+        const user_1 = response.body as User;
+        expect(user_1.last_name).toEqual('Del Barrio Fernandez');
+    });
+
+    it('Block update if id does not match token', async () => {
+        const update_user: User = {
+            id: 2,
+            username: 'mari',
+            first_name: 'Mariela',
+            last_name: 'Del Barrio Fernandez',
+        }
+        const response = await request.put('/users/2').set('Authorization', 'Bearer ' + token).send(update_user);
+        expect(response.status).toBe(401);
+        expect(response.body.error).toEqual('Unauthorized');
+    });
+
     it('Authenticate password and verify token', async () => {
         const response = await request.post('/users/authenticate').send(user);
         expect(response.status).toBe(200);
         const res_token = response.body;
         const decoded = jwt.verify(res_token, secret_token) as User;
         expect(decoded.username).toBe(user.username);
+    });
+
+    it('Delete user with id=1', async () => {
+        const response = await request.delete('/users/1').set('Authorization', 'Bearer ' + token);
+        expect(response.status).toBe(200);
+        const user_1 = response.body as User;
+        expect(user_1.id).toEqual(1);
     });
 
 }); 
