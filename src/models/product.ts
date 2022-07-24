@@ -1,7 +1,4 @@
 import Client from '../database';
-import dotenv from 'dotenv';
-
-dotenv.config();
 
 export type Product = {
   id?: number;

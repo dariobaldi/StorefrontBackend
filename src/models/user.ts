@@ -11,6 +11,7 @@ const saltRounds: number = parseInt(
 
 export type User = {
   id?: number;
+  username: string;
   first_name: string;
   last_name: string;
   password?: string;
@@ -22,11 +23,12 @@ export class UserStore {
     try {
       const conn = await Client.connect();
       const sql =
-        'INSERT INTO users (first_name, last_name, password_hash) VALUES ($1, $2, $3) RETURNING *;';
-      const { first_name, last_name, password } = user;
+        'INSERT INTO users (username, first_name, last_name, password_hash) VALUES ($1, $2, $3, $4) RETURNING id, username, first_name, last_name;';
+      const { username, first_name, last_name, password } = user;
 
       const password_hash = await bcrypt.hash(password + pepper, saltRounds);
       const result = await Client.query(sql, [
+        username,
         first_name,
         last_name,
         password_hash
@@ -92,8 +94,8 @@ export class UserStore {
   async authenticate(user: User): Promise<User> {
     try {
       const conn = await Client.connect();
-      const sql = 'SELECT * FROM users WHERE id=$1;';
-      const result = await Client.query(sql, [user.id]);
+      const sql = 'SELECT * FROM users WHERE username=$1;';
+      const result = await Client.query(sql, [user.username]);
       conn.release();
       if (result.rows.length === 0) {
         throw new Error('User not found');
@@ -107,6 +109,7 @@ export class UserStore {
           selected_user.password_hash
         )
       ) {
+        delete selected_user.password_hash;
         return selected_user;
       }
       throw new Error('Password incorrect');
