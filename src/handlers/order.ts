@@ -1,5 +1,6 @@
 import express, { Request, Response } from 'express';
 import { Order, OrderProduct, OrderStore } from '../models/order';
+import { verifyToken } from './user';
 
 const store = new OrderStore();
 
@@ -30,7 +31,7 @@ const index = async (req: Request, res: Response) => {
   }
 };
 
-const select = async (req: Request, res: Response) => {
+const show = async (req: Request, res: Response) => {
   try {
     const id = req.params.id as unknown as number;
     const order = await store.show(id);
@@ -157,17 +158,17 @@ const deleteProduct = async (req: Request, res: Response) => {
 };
 
 const orderRoutes = (app: express.Application) => {
-  app.post('/api/orders', create);
-  app.get('/api/orders', index);
-  app.get('/api/orders/:id', select);
-  app.put('/api/orders/:id', update);
-  app.delete('/api/orders/:id', del);
-  app.get('/api/orders/open/user/:id', currentOrder);
-  app.get('/api/orders/completed/user/:id', completedOrders);
-  app.post('/api/orders/:id/products', addProduct);
-  app.get('/api/orders/:id/products', getProducts);
-  app.put('/api/orders/:order_id/products/:product_id', updateProduct);
-  app.delete('/api/orders/:order_id/products/:product_id', deleteProduct);
+  app.post('/orders', create);
+  app.get('/orders', index);
+  app.get('/orders/:id', show);
+  app.put('/orders/:id', update);
+  app.delete('/orders/:id', del);
+  app.get('/orders/open/user/:id', verifyToken, currentOrder);
+  app.get('/orders/completed/user/:id', verifyToken, completedOrders);
+  app.post('/orders/:id/products', verifyToken, addProduct);
+  app.get('/orders/:id/products', verifyToken, getProducts);
+  app.put('/orders/:order_id/products/:product_id', verifyToken, updateProduct);
+  app.delete('/orders/:order_id/products/:product_id', verifyToken, deleteProduct);
 };
 
 export default orderRoutes;

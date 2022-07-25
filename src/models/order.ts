@@ -1,13 +1,13 @@
 import Client from '../database';
 
 export type Order = {
-  id: number;
+  id?: number;
   user_id: number;
   status: string;
 };
 
 export type OrderProduct = {
-  id: number;
+  id?: number;
   order_id: number;
   product_id: number;
   quantity: number;
@@ -76,7 +76,7 @@ export class OrderStore {
   async delete(id: number): Promise<Order> {
     try {
       const conn = await Client.connect();
-      const sql = 'DELETE FROM orders WHERE id = $1;';
+      const sql = 'DELETE FROM orders WHERE id = $1 RETURNING *;';
       const result = await conn.query(sql, [id]);
       conn.release();
       return result.rows[0];
@@ -160,7 +160,7 @@ export class OrderStore {
   async deleteProduct(id: number): Promise<OrderProduct> {
     try {
       const conn = await Client.connect();
-      const sql = 'DELETE FROM order_products WHERE id = $1;';
+      const sql = 'DELETE FROM order_products WHERE id = $1 RETURNING *;';
       const result = await conn.query(sql, [id]);
       conn.release();
       return result.rows[0];
