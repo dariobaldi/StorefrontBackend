@@ -19,14 +19,14 @@ describe('- Product Model', () => {
     expect(products[0]).toBeTruthy();
   });
 
-  it('Show product with id 2', async () => {
-    const product = await store.show(2);
-    expect(product.id).toBe(2);
+  it('Show product with id 3', async () => {
+    const product = await store.show(3);
+    expect(product.id).toBe(3);
   });
 
   it('Update product', async () => {
     const updateProduct: Product = {
-      id: 2,
+      id: 3,
       name: 'Muñeco Francellita',
       price: 1590,
       category: 'Juguete'
@@ -37,8 +37,8 @@ describe('- Product Model', () => {
     expect(newProduct.category).toBe('Juguete');
   });
 
-  it('Delete product with id 2', async () => {
-    const product = await store.delete(2);
-    expect(product.id).toEqual(2);
+  it('Delete product with id 3', async () => {
+    const product = await store.delete(3);
+    expect(product.id).toEqual(3);
   });
 });

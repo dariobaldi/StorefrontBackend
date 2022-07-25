@@ -47,7 +47,7 @@ describe('- User Model Tests', () => {
 
   it('Update user', async () => {
     const update_user: User = {
-      id: 2,
+      id: 3,
       username: 'juanpe',
       first_name: 'Victoria',
       last_name: 'Sosa'
@@ -59,8 +59,8 @@ describe('- User Model Tests', () => {
     ]);
   });
 
-  it('Delete user with id 2', async () => {
-    const user = await store.delete(2);
-    expect(user.id).toBe(2);
+  it('Delete user with id 3', async () => {
+    const user = await store.delete(3);
+    expect(user.id).toBe(3);
   });
 });
