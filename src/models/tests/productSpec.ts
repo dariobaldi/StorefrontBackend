@@ -3,15 +3,19 @@ import { Product, ProductStore } from '../product';
 const store = new ProductStore();
 
 describe('- Product Model', () => {
+  let product_id: number;
   const product: Product = {
     name: 'Muñeco Francella',
     price: 15,
     category: 'Toy'
   };
 
-  it('Should create a product with correct name', async () => {
+  it('Should create a product with correct info', async () => {
     const newProduct = await store.create(product);
-    expect(newProduct.name).toBe('Muñeco Francella');
+    expect(newProduct.name).toBe(product.name);
+    expect(newProduct.price).toBe(product.price);
+    expect(newProduct.category).toBe(product.category);
+    product_id = newProduct.id as number;
   });
 
   it('Index should return at least 1 product (we just created 1)', async () => {
@@ -19,14 +23,14 @@ describe('- Product Model', () => {
     expect(products[0]).toBeTruthy();
   });
 
-  it('Show product with id 3', async () => {
-    const product = await store.show(3);
-    expect(product.id).toBe(3);
+  it('Show product', async () => {
+    const product = await store.show(product_id);
+    expect(product.id).toBe(product_id);
   });
 
   it('Update product', async () => {
     const updateProduct: Product = {
-      id: 3,
+      id: product_id,
       name: 'Muñeco Francellita',
       price: 1590,
       category: 'Juguete'
@@ -37,8 +41,8 @@ describe('- Product Model', () => {
     expect(newProduct.category).toBe('Juguete');
   });
 
-  it('Delete product with id 3', async () => {
-    const product = await store.delete(3);
-    expect(product.id).toEqual(3);
+  it('Delete product', async () => {
+    const product = await store.delete(product_id);
+    expect(product.id).toEqual(product_id);
   });
 });

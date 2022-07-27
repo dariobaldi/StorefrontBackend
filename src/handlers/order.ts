@@ -14,7 +14,7 @@ const create = async (req: Request, res: Response) => {
       res.status(400).json({ error: 'Could not create order' });
     }
   } catch (err) {
-    res.status(500).json({ error: 'Order was not created' });
+    res.status(500).json({ error: `Order was not created: ${err}` });
   }
 };
 
@@ -73,10 +73,15 @@ const del = async (req: Request, res: Response) => {
   }
 };
 
-const currentOrder = (req: Request, res: Response) => {
+const currentOrder = async (req: Request, res: Response) => {
   try {
+    if (req.params.id != res.locals.user.id) {
+      res
+        .status(401)
+        .json({ error: 'You are not authorized to retrieve this order' });
+    }
     const user_id = req.params.id as unknown as number;
-    const orders = store.currentOrder(user_id);
+    const orders = await store.currentOrder(user_id);
     if (orders) {
       res.status(200).json(orders);
     } else {
@@ -89,6 +94,11 @@ const currentOrder = (req: Request, res: Response) => {
 
 const completedOrders = async (req: Request, res: Response) => {
   try {
+    if (req.params.id != res.locals.user.id) {
+      res
+        .status(401)
+        .json({ error: 'You are not authorized to retrieve completed orders' });
+    }
     const user_id = req.params.id as unknown as number;
     const orders = await store.completedOrders(user_id);
     if (orders) {
@@ -104,6 +114,7 @@ const completedOrders = async (req: Request, res: Response) => {
 const addProduct = async (req: Request, res: Response) => {
   try {
     const orderProduct = req.body as OrderProduct;
+
     const newOrderProduct = await store.addProduct(orderProduct);
     if (newOrderProduct) {
       res.status(201).json(newOrderProduct);
@@ -111,7 +122,7 @@ const addProduct = async (req: Request, res: Response) => {
       res.status(400).json({ error: 'Could not add product' });
     }
   } catch (err) {
-    res.status(500).json({ error: 'Could not add product' });
+    res.status(500).json({ error: `Could not add product: ${err}` });
   }
 };
 
@@ -145,7 +156,7 @@ const updateProduct = async (req: Request, res: Response) => {
 
 const deleteProduct = async (req: Request, res: Response) => {
   try {
-    const id = req.params.id as unknown as number;
+    const id = req.params.product_id as unknown as number;
     const deletedOrderProduct = await store.deleteProduct(id);
     if (deletedOrderProduct) {
       res.status(200).json(deletedOrderProduct);
@@ -168,7 +179,11 @@ const orderRoutes = (app: express.Application) => {
   app.post('/orders/:id/products', verifyToken, addProduct);
   app.get('/orders/:id/products', verifyToken, getProducts);
   app.put('/orders/:order_id/products/:product_id', verifyToken, updateProduct);
-  app.delete('/orders/:order_id/products/:product_id', verifyToken, deleteProduct);
+  app.delete(
+    '/orders/:order_id/products/:product_id',
+    verifyToken,
+    deleteProduct
+  );
 };
 
 export default orderRoutes;

@@ -3,6 +3,7 @@ import { User, UserStore } from '../user';
 const store = new UserStore();
 
 describe('- User Model Tests', () => {
+  let user_id: number;
   const user: User = {
     username: 'juanpe',
     first_name: 'Juan',
@@ -12,7 +13,10 @@ describe('- User Model Tests', () => {
 
   it('Should create a user with correct name', async () => {
     const newUser = await store.create(user);
-    expect([newUser.first_name, newUser.last_name]).toEqual(['Juan', 'Perez']);
+    expect(newUser.username).toBe(user.username);
+    expect(newUser.first_name).toBe(user.first_name);
+    expect(newUser.last_name).toBe(user.last_name);
+    user_id = newUser.id as number;
   });
 
   it('Index should return at least 1 user (we just created 1)', async () => {
@@ -21,13 +25,7 @@ describe('- User Model Tests', () => {
   });
 
   it('Accept right password', async () => {
-    const log_user: User = {
-      username: 'juanpe',
-      first_name: 'Victoria',
-      last_name: 'Sosa',
-      password: 'password'
-    };
-    await expectAsync(store.authenticate(log_user)).toBeResolved();
+    await expectAsync(store.authenticate(user)).toBeResolved();
   });
 
   it('Reject wrong password', async () => {
@@ -40,14 +38,14 @@ describe('- User Model Tests', () => {
     await expectAsync(store.authenticate(log_user)).toBeRejected();
   });
 
-  it('Show user with id 2', async () => {
-    const user = await store.show(2);
-    expect(user.id).toBe(2);
+  it('Show user', async () => {
+    const user = await store.show(user_id);
+    expect(user.id).toBe(user_id);
   });
 
   it('Update user', async () => {
     const update_user: User = {
-      id: 3,
+      id: user_id,
       username: 'juanpe',
       first_name: 'Victoria',
       last_name: 'Sosa'
@@ -59,8 +57,8 @@ describe('- User Model Tests', () => {
     ]);
   });
 
-  it('Delete user with id 3', async () => {
-    const user = await store.delete(3);
-    expect(user.id).toBe(3);
+  it('Delete user', async () => {
+    const user = await store.delete(user_id);
+    expect(user.id).toBe(user_id);
   });
 });

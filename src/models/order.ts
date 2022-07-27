@@ -91,6 +91,9 @@ export class OrderStore {
       const sql = `SELECT * FROM orders WHERE user_id = $1 AND status = 'open';`;
       const result = await conn.query(sql, [user_id]);
       conn.release();
+      if (result.rows.length === 0) {
+        throw new Error(`Could not find open order for user: ${user_id}`);
+      }
       return result.rows;
     } catch (err) {
       throw new Error(`Could not get open orders by user id: ${err}`);

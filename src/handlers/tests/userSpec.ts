@@ -5,24 +5,27 @@ import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 
 dotenv.config();
-
 const secret_token = process.env.SECRET_TOKEN as unknown as string;
 
 const request = supertest(app);
 
 describe('- User Handler:', () => {
+  let user_id: number;
+  let token: string;
   const user: User = {
     username: 'mari',
     first_name: 'Mariela',
     last_name: 'Del Barrio',
     password: 'oculto'
   };
-  const token =
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJtYXJpIiwiZmlyc3RfbmFtZSI6Ik1hcmllbGEiLCJsYXN0X25hbWUiOiJEZWwgQmFycmlvIiwiaWF0IjoxNjU4NjQ0NDg1fQ.IDW55pCtF9bNgzBPCkWahAXGm7XhedfJ--3NF7ckNlg';
 
   it('Create a user', async () => {
     const response = await request.post('/users').send(user);
     expect(response.status).toBe(201);
+    token = response.body;
+
+    const decoded = jwt.verify(token, secret_token) as User;
+    user_id = decoded.id as unknown as number;
   });
 
   it('Get all users', async () => {
@@ -34,24 +37,24 @@ describe('- User Handler:', () => {
     expect(users[0]).toBeTruthy();
   });
 
-  it('Show user with id=1', async () => {
+  it('Show user by id', async () => {
     const response = await request
-      .get('/users/1')
+      .get(`/users/${user_id}`)
       .set('Authorization', 'Bearer ' + token);
     expect(response.status).toBe(200);
     const user_1 = response.body as User;
-    expect(user_1.id).toEqual(1);
+    expect(user_1.id).toEqual(user_id);
   });
 
-  it('Update user with id=1', async () => {
+  it('Update user with id', async () => {
     const update_user: User = {
-      id: 1,
+      id: user_id,
       username: 'mari',
       first_name: 'Mariela',
       last_name: 'Del Barrio Fernandez'
     };
     const response = await request
-      .put('/users/1')
+      .put(`/users/${update_user.id}`)
       .set('Authorization', 'Bearer ' + token)
       .send(update_user);
     expect(response.status).toBe(200);
@@ -61,13 +64,13 @@ describe('- User Handler:', () => {
 
   it('Block update if id does not match token', async () => {
     const update_user: User = {
-      id: 2,
+      id: user_id + 1,
       username: 'mari',
       first_name: 'Mariela',
       last_name: 'Del Barrio Fernandez'
     };
     const response = await request
-      .put('/users/2')
+      .put(`/users/${update_user.id}`)
       .set('Authorization', 'Bearer ' + token)
       .send(update_user);
     expect(response.status).toBe(401);
@@ -82,12 +85,12 @@ describe('- User Handler:', () => {
     expect(decoded.username).toBe(user.username);
   });
 
-  it('Delete user with id=1', async () => {
+  it('Delete user by id', async () => {
     const response = await request
-      .delete('/users/1')
+      .delete(`/users/${user_id}`)
       .set('Authorization', 'Bearer ' + token);
     expect(response.status).toBe(200);
     const user_1 = response.body as User;
-    expect(user_1.id).toEqual(1);
+    expect(user_1.id).toEqual(user_id);
   });
 });

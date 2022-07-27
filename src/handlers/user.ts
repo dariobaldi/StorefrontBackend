@@ -12,7 +12,7 @@ const create = async (req: Request, res: Response) => {
   try {
     const user = req.body as User;
     const newUser = await store.create(user);
-    const token = jwt.sign({ user: newUser }, secret_token);
+    const token = jwt.sign(newUser, secret_token);
     if (newUser) {
       res.status(201).json(token);
     } else {
@@ -34,6 +34,9 @@ const index = async (req: Request, res: Response) => {
 
 const show = async (req: Request, res: Response) => {
   try {
+    if (req.params.id != res.locals.user.id) {
+      res.status(401).json({ error: 'Unauthorized' });
+    }
     const id = req.params.id as unknown as number;
     const user = await store.show(id);
     delete user.password_hash;
@@ -44,22 +47,11 @@ const show = async (req: Request, res: Response) => {
 };
 
 const update = async (req: Request, res: Response) => {
-  const user = req.body as User;
-
-  // Verify user id from token
   try {
-    const authHeader = req.headers.authorization as unknown as string;
-    const token = authHeader.split(' ')[1];
-    const decoded = jwt.verify(token, secret_token) as User;
-
-    if (decoded.id !== user.id) {
+    if (req.params.id != res.locals.user.id) {
       res.status(401).json({ error: 'Unauthorized' });
     }
-  } catch (err) {
-    res.status(401).json(err);
-  }
-
-  try {
+    const user = req.body as User;
     const updatedUser = await store.update(user);
     res.status(200).json(updatedUser);
   } catch (err) {
@@ -69,6 +61,9 @@ const update = async (req: Request, res: Response) => {
 
 const del = async (req: Request, res: Response) => {
   try {
+    if (req.params.id != res.locals.user.id) {
+      res.status(401).json({ error: 'Unauthorized' });
+    }
     const id = req.params.id as unknown as number;
     const deletedUser = await store.delete(id);
     res.json(deletedUser);
@@ -102,10 +97,10 @@ export const verifyToken = async (
     const token = authHeader.split(' ')[1];
     const decoded = jwt.verify(token, secret_token) as User;
 
-    req.body.user = decoded;
+    res.locals.user = decoded;
     next();
   } catch (err) {
-    res.status(401).json({ error: 'Invalid token' });
+    res.status(401).json({ error: `Invalid token: ${err}` });
   }
 };
 

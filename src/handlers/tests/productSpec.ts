@@ -32,7 +32,7 @@ describe('- Product Handler:', () => {
     expect(products[0]).toBeTruthy();
   });
 
-  it('Show product with id 1', async () => {
+  it('Show product by id', async () => {
     const product = await request.get('/products/1');
     expect(product.body.id).toBe(1);
   });
