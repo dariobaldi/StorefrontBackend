@@ -27,11 +27,15 @@ These are the notes from a meeting with the frontend developer that describe wha
 - price
 - [OPTIONAL] category
 
+TABLE products (id: SERIAL [PRIMARY KEY], name: VARCHAR, price: INTEGER [Price in cents], category: VARCHAR)
+
 #### User
 - id
 - firstName
 - lastName
 - password
+
+TABLE users (id: SERIAL [PRIMARY KEY], username: VARCHAR, first_name: VARCHAR, last_name: VARCHAR, password_hash: VARCHAR)
 
 #### Orders
 - id
@@ -40,3 +44,6 @@ These are the notes from a meeting with the frontend developer that describe wha
 - user_id
 - status of order (active or complete)
 
+TABLE orders (id: SERIAL [PRIMARY KEY], user_id: INTEGER [foreign key to users table], status: VARCHAR)
+
+TABLE order_products(id: SERIAL [PRIMARY KEY], order_id: INTEGER [foreign key to orders table], product_id: INTEGER [foreign key to products table], quantity: INTEGER)
