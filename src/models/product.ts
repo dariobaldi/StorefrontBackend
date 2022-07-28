@@ -15,7 +15,6 @@ export class ProductStore {
         VALUES ($1, $2, $3) 
         RETURNING *;`;
       const { name, price, category } = product;
-
       const result = await Client.query(sql, [name, price, category]);
       conn.release();
       return result.rows[0];
@@ -58,9 +57,7 @@ export class ProductStore {
       SET name = $1, price = $2, category = $3 
       WHERE id = $4 
       RETURNING *;`;
-
       const { name, price, category, id } = product;
-
       const result = await Client.query(sql, [name, price, category, id]);
       conn.release();
       return result.rows[0];

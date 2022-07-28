@@ -25,7 +25,6 @@ export class UserStore {
       const sql =
         'INSERT INTO users (username, first_name, last_name, password_hash) VALUES ($1, $2, $3, $4) RETURNING id, username, first_name, last_name;';
       const { username, first_name, last_name, password } = user;
-
       const password_hash = await bcrypt.hash(password + pepper, saltRounds);
       const result = await Client.query(sql, [
         username,
@@ -73,7 +72,6 @@ export class UserStore {
       const sql =
         'UPDATE users SET first_name = $1, last_name = $2 WHERE id = $3 RETURNING *;';
       const { first_name, last_name, id } = user;
-
       const result = await Client.query(sql, [first_name, last_name, id]);
       conn.release();
       return result.rows[0];

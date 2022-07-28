@@ -6,7 +6,7 @@ describe('- Product Model', () => {
   let product_id: number;
   const product: Product = {
     name: 'Muñeco Francella',
-    price: 15,
+    price: 1500,
     category: 'Toy'
   };
 
@@ -32,12 +32,12 @@ describe('- Product Model', () => {
     const updateProduct: Product = {
       id: product_id,
       name: 'Muñeco Francellita',
-      price: 1590,
+      price: 1990,
       category: 'Juguete'
     };
     const newProduct = (await store.update(updateProduct)) as Product;
     expect(newProduct.name).toBe('Muñeco Francellita');
-    expect(newProduct.price).toBe(1590);
+    expect(newProduct.price).toBe(1990);
     expect(newProduct.category).toBe('Juguete');
   });
 

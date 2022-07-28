@@ -19,7 +19,7 @@ const create = async (req: Request, res: Response) => {
       res.status(400).json({ error: 'User was not created' });
     }
   } catch (err) {
-    res.status(400).json({ error: `User was not created / ${err}` });
+    res.status(400).json({ error: `User was not created: ${err}` });
   }
 };
 
@@ -73,8 +73,8 @@ const del = async (req: Request, res: Response) => {
 };
 
 const authenticatePassword = async (req: Request, res: Response) => {
-  const req_user = req.body as User;
   try {
+    const req_user = req.body as User;
     const user = await store.authenticate(req_user);
     if (user) {
       const token = jwt.sign(user, secret_token);

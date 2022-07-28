@@ -5,8 +5,8 @@ import { verifyToken } from './user';
 const store = new OrderStore();
 
 const create = async (req: Request, res: Response) => {
-  const order = req.body as Order;
   try {
+    const order = req.body as Order;
     const newOrder = await store.create(order);
     if (newOrder) {
       res.status(201).json(newOrder);
@@ -27,7 +27,7 @@ const index = async (req: Request, res: Response) => {
       res.status(400).json({ error: 'Could not get orders' });
     }
   } catch (err) {
-    res.status(500).json({ error: 'Could not get orders' });
+    res.status(500).json({ error: `Could not get orders: ${err}` });
   }
 };
 
@@ -41,7 +41,7 @@ const show = async (req: Request, res: Response) => {
       res.status(400).json({ error: 'Could not get order' });
     }
   } catch (err) {
-    res.status(500).json({ error: 'Could not get order' });
+    res.status(500).json({ error: `Could not get order: ${err}` });
   }
 };
 
@@ -55,7 +55,7 @@ const update = async (req: Request, res: Response) => {
       res.status(400).json({ error: 'Could not update order' });
     }
   } catch (err) {
-    res.status(500).json({ error: 'Could not update order' });
+    res.status(500).json({ error: `Could not update order: ${err}` });
   }
 };
 
@@ -69,7 +69,7 @@ const del = async (req: Request, res: Response) => {
       res.status(400).json({ error: 'Could not delete order' });
     }
   } catch (err) {
-    res.status(500).json({ error: 'Could not delete order' });
+    res.status(500).json({ error: `Could not delete order: ${err}` });
   }
 };
 
@@ -88,7 +88,7 @@ const currentOrder = async (req: Request, res: Response) => {
       res.status(400).json({ error: 'Could not get orders' });
     }
   } catch (err) {
-    res.status(500).json({ error: 'Could not get orders' });
+    res.status(500).json({ error: `Could not get orders: ${err}` });
   }
 };
 
@@ -107,14 +107,13 @@ const completedOrders = async (req: Request, res: Response) => {
       res.status(400).json({ error: 'Could not get orders' });
     }
   } catch (err) {
-    res.status(500).json({ error: 'Could not get orders' });
+    res.status(500).json({ error: `Could not get orders: ${err}` });
   }
 };
 
 const addProduct = async (req: Request, res: Response) => {
   try {
     const orderProduct = req.body as OrderProduct;
-
     const newOrderProduct = await store.addProduct(orderProduct);
     if (newOrderProduct) {
       res.status(201).json(newOrderProduct);
@@ -136,7 +135,7 @@ const getProducts = async (req: Request, res: Response) => {
       res.status(400).json({ error: 'Could not get order products' });
     }
   } catch (err) {
-    res.status(500).json({ error: 'Could not get order products' });
+    res.status(500).json({ error: `Could not get order products: ${err}` });
   }
 };
 

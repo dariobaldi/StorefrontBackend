@@ -14,7 +14,7 @@ const create = async (req: Request, res: Response) => {
       res.status(400).json({ error: 'Product was not created' });
     }
   } catch (err) {
-    res.status(400).json({ error: `Product was not created / ${err}` });
+    res.status(400).json({ error: `Product was not created: ${err}` });
   }
 };
 

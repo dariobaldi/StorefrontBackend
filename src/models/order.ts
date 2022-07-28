@@ -20,7 +20,8 @@ export class OrderStore {
       const sql = `INSERT INTO orders (user_id, status)
         VALUES ($1, $2)
         RETURNING id, user_id, status`;
-      const result = await conn.query(sql, [order.user_id, order.status]);
+      const { user_id, status } = order;
+      const result = await conn.query(sql, [user_id, status]);
       conn.release();
       return result.rows[0];
     } catch (err) {
@@ -62,9 +63,7 @@ export class OrderStore {
       SET user_id = $1, status = $2 
       WHERE id = $3 
       RETURNING *;`;
-
       const { user_id, status, id } = order;
-
       const result = await conn.query(sql, [user_id, status, id]);
       conn.release();
       return result.rows[0];
@@ -118,11 +117,8 @@ export class OrderStore {
       const sql = `INSERT INTO order_products (order_id, product_id, quantity)
         VALUES ($1, $2, $3)
         RETURNING *;`;
-      const result = await conn.query(sql, [
-        orderProduct.order_id,
-        orderProduct.product_id,
-        orderProduct.quantity
-      ]);
+      const { order_id, product_id, quantity } = orderProduct;
+      const result = await conn.query(sql, [order_id, product_id, quantity]);
       conn.release();
       return result.rows[0];
     } catch (err) {
@@ -149,9 +145,7 @@ export class OrderStore {
       SET quantity = $1 
       WHERE id = $2 
       RETURNING *;`;
-
       const { quantity, id } = orderProduct;
-
       const result = await conn.query(sql, [quantity, id]);
       conn.release();
       return result.rows[0];
