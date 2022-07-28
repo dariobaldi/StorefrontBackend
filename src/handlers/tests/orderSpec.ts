@@ -161,4 +161,13 @@ describe('- Order Handler:', () => {
     expect(response.status).toBe(200);
     expect(response.body.id).toEqual(order_id);
   });
+
+  afterAll(async () => {
+    await request
+      .delete(`/users/${user_id}`)
+      .set('Authorization', 'Bearer ' + token);
+    await request
+      .delete(`/products/${product_id}`)
+      .set('Authorization', 'Bearer ' + token);
+  });
 });
