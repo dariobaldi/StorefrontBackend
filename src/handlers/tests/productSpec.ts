@@ -9,7 +9,9 @@ describe('- Product Handler:', () => {
   const product: Product = {
     name: 'Muñeca Mimish',
     price: 2500,
-    category: 'Toy'
+    category: 'Toy',
+    url: 'https://www.google.com',
+    description: 'Un muñeco de mimish',
   };
   const token =
     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJtYXJpIiwiZmlyc3RfbmFtZSI6Ik1hcmllbGEiLCJsYXN0X25hbWUiOiJEZWwgQmFycmlvIiwiaWF0IjoxNjU4NjQ0NDg1fQ.IDW55pCtF9bNgzBPCkWahAXGm7XhedfJ--3NF7ckNlg';
@@ -24,6 +26,8 @@ describe('- Product Handler:', () => {
     expect(newProduct.name).toBe('Muñeca Mimish');
     expect(newProduct.price).toBe(2500);
     expect(newProduct.category).toBe('Toy');
+    expect(newProduct.url).toBe('https://www.google.com');
+    expect(newProduct.description).toBe('Un muñeco de mimish');
     product_id = newProduct.id as number;
   });
 
@@ -44,7 +48,9 @@ describe('- Product Handler:', () => {
       id: product_id,
       name: 'Mini Massai',
       price: 2190,
-      category: 'Juguete'
+      category: 'Juguete',
+      url: 'https://www.google.com/search?q=Massai+mini',
+      description: 'Un mini massai'
     };
     const newProduct = await request
       .put(`/products/${product_id}`)
@@ -52,6 +58,8 @@ describe('- Product Handler:', () => {
     expect(newProduct.body.name).toBe('Mini Massai');
     expect(newProduct.body.price).toBe(2190);
     expect(newProduct.body.category).toBe('Juguete');
+    expect(newProduct.body.url).toBe('https://www.google.com/search?q=Massai+mini');
+    expect(newProduct.body.description).toBe('Un mini massai');
   });
 
   it('Get products by category', async () => {

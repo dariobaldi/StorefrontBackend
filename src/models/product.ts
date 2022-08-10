@@ -4,18 +4,20 @@ export type Product = {
   id?: number;
   name: string;
   price: number;
-  category?: string;
+  category: string;
+  url: string;
+  description: string;
 };
 
 export class ProductStore {
   async create(product: Product): Promise<Product> {
     try {
       const conn = await Client.connect();
-      const sql = `INSERT INTO products (name, price, category) 
+      const sql = `INSERT INTO products (name, price, url, description)) 
         VALUES ($1, $2, $3) 
         RETURNING *;`;
-      const { name, price, category } = product;
-      const result = await Client.query(sql, [name, price, category]);
+      const { name, price, url, description } = product;
+      const result = await Client.query(sql, [name, price, url, description]);
       conn.release();
       return result.rows[0];
     } catch (err) {
@@ -54,11 +56,11 @@ export class ProductStore {
     try {
       const conn = await Client.connect();
       const sql = `UPDATE products 
-      SET name = $1, price = $2, category = $3 
-      WHERE id = $4 
+      SET name = $1, price = $2, category = $3, url = $4, description = $5 
+      WHERE id = $6 
       RETURNING *;`;
-      const { name, price, category, id } = product;
-      const result = await Client.query(sql, [name, price, category, id]);
+      const { name, price, category, url, description, id } = product;
+      const result = await Client.query(sql, [name, price, category, url, description, id]);
       conn.release();
       return result.rows[0];
     } catch (err) {
