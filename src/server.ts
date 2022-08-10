@@ -10,7 +10,7 @@ const port = 3333;
 
 //Add Cors to allow cross-origin requests
 const corsOptions = {
-  origin: 'http://hereswheretheexternaldomaingoes.com',
+  origin: 'http://localhost:4200',
   optionsSuccessStatus: 200
 };
 app.use(cors(corsOptions));

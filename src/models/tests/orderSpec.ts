@@ -36,7 +36,7 @@ describe('- Order Model', () => {
 
     const product: Product = {
       name: 'Loco Lope',
-      price: 1000,
+      price: 10.00,
       category: 'TV series',
       url: 'https://www.google.com',
       description: 'Un loco de Lope'

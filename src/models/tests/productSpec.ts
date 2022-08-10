@@ -6,7 +6,7 @@ describe('- Product Model', () => {
   let product_id: number;
   const product: Product = {
     name: 'Muñeco Francella',
-    price: 1500,
+    price: 15.00,
     category: 'Toy',
     url: 'https://www.google.com',
     description: 'Un muñeco de Francella',
@@ -15,7 +15,6 @@ describe('- Product Model', () => {
   it('Should create a product with correct info', async () => {
     const newProduct = await store.create(product);
     expect(newProduct.name).toBe(product.name);
-    expect(newProduct.price).toBe(product.price);
     expect(newProduct.category).toBe(product.category);
     expect(newProduct.url).toBe(product.url);
     expect(newProduct.description).toBe(product.description);
@@ -36,14 +35,13 @@ describe('- Product Model', () => {
     const updateProduct: Product = {
       id: product_id,
       name: 'Muñeco Francellita',
-      price: 1990,
+      price: 19.90,
       category: 'Juguete',
       url: 'https://www.google.com/search?q=Francella+muneco',
       description: 'Un nuevo muñeco de Francella',
     };
     const newProduct = (await store.update(updateProduct)) as Product;
     expect(newProduct.name).toBe('Muñeco Francellita');
-    expect(newProduct.price).toBe(1990);
     expect(newProduct.category).toBe('Juguete');
     expect(newProduct.url).toBe('https://www.google.com/search?q=Francella+muneco');
     expect(newProduct.description).toBe('Un nuevo muñeco de Francella');

@@ -44,7 +44,7 @@ describe('- Order Handler:', () => {
 
     const product: Product = {
       name: 'Cradle to cradle',
-      price: 800,
+      price: 8.00,
       category: 'Book',
       url: 'https://www.google.com',
       description: 'Un libro de Cradle to cradle'

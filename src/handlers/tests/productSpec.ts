@@ -8,7 +8,7 @@ describe('- Product Handler:', () => {
   let product_id: number;
   const product: Product = {
     name: 'Muñeca Mimish',
-    price: 2500,
+    price: 25.00,
     category: 'Toy',
     url: 'https://www.google.com',
     description: 'Un muñeco de mimish',
@@ -21,10 +21,10 @@ describe('- Product Handler:', () => {
       .post('/products')
       .set('Authorization', 'Bearer ' + token)
       .send(product);
-    const newProduct = response.body as Product;
+    const newProduct = response.body;
     expect(response.status).toBe(201);
     expect(newProduct.name).toBe('Muñeca Mimish');
-    expect(newProduct.price).toBe(2500);
+    expect(newProduct.price).toBe('25.00');
     expect(newProduct.category).toBe('Toy');
     expect(newProduct.url).toBe('https://www.google.com');
     expect(newProduct.description).toBe('Un muñeco de mimish');
@@ -47,7 +47,7 @@ describe('- Product Handler:', () => {
     const updateProduct: Product = {
       id: product_id,
       name: 'Mini Massai',
-      price: 2190,
+      price: 21.9,
       category: 'Juguete',
       url: 'https://www.google.com/search?q=Massai+mini',
       description: 'Un mini massai'
@@ -56,7 +56,7 @@ describe('- Product Handler:', () => {
       .put(`/products/${product_id}`)
       .send(updateProduct);
     expect(newProduct.body.name).toBe('Mini Massai');
-    expect(newProduct.body.price).toBe(2190);
+    expect(newProduct.body.price).toBe('21.90');
     expect(newProduct.body.category).toBe('Juguete');
     expect(newProduct.body.url).toBe('https://www.google.com/search?q=Massai+mini');
     expect(newProduct.body.description).toBe('Un mini massai');
