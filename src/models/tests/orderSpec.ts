@@ -37,7 +37,9 @@ describe('- Order Model', () => {
     const product: Product = {
       name: 'Loco Lope',
       price: 1000,
-      category: 'TV series'
+      category: 'TV series',
+      url: 'https://www.google.com',
+      description: 'Un loco de Lope'
     };
     const new_product = await product_store.create(product);
     product_id = new_product.id as number;

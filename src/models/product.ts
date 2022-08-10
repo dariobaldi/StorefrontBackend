@@ -13,11 +13,11 @@ export class ProductStore {
   async create(product: Product): Promise<Product> {
     try {
       const conn = await Client.connect();
-      const sql = `INSERT INTO products (name, price, url, description)) 
-        VALUES ($1, $2, $3) 
+      const sql = `INSERT INTO products (name, price, url, description, category) 
+        VALUES ($1, $2, $3, $4, $5) 
         RETURNING *;`;
-      const { name, price, url, description } = product;
-      const result = await Client.query(sql, [name, price, url, description]);
+      const { name, price, url, description, category } = product;
+      const result = await Client.query(sql, [name, price, url, description, category]);
       conn.release();
       return result.rows[0];
     } catch (err) {

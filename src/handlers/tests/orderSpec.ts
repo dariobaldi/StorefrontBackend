@@ -45,7 +45,9 @@ describe('- Order Handler:', () => {
     const product: Product = {
       name: 'Cradle to cradle',
       price: 800,
-      category: 'Book'
+      category: 'Book',
+      url: 'https://www.google.com',
+      description: 'Un libro de Cradle to cradle'
     };
     const new_product = await request
       .post('/products')
@@ -162,12 +164,12 @@ describe('- Order Handler:', () => {
     expect(response.body.id).toEqual(order_id);
   });
 
-  afterAll(async () => {
-    await request
-      .delete(`/users/${user_id}`)
-      .set('Authorization', 'Bearer ' + token);
-    await request
-      .delete(`/products/${product_id}`)
-      .set('Authorization', 'Bearer ' + token);
-  });
+  // afterAll(async () => {
+  //   await request
+  //     .delete(`/users/${user_id}`)
+  //     .set('Authorization', 'Bearer ' + token);
+  //   await request
+  //     .delete(`/products/${product_id}`)
+  //     .set('Authorization', 'Bearer ' + token);
+  // });
 });
