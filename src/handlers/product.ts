@@ -68,7 +68,7 @@ const getProductsByCategory = async (req: Request, res: Response) => {
 };
 
 const productRoutes = (app: express.Application) => {
-  app.post('/products', verifyToken, create);
+  app.post('/products', create);
   app.get('/products', index);
   app.get('/products/:id', show);
   app.put('/products/:id', update);
